@@ -16,12 +16,12 @@ module.exports = {
             client.closing.set(ticket.id, true)
 
             const messages = await client.db.collection("modmailMessages").find({ id: ticket.id }).toArray()
-            let users = messages.map(m => m.author);
-            users = [...new Set(users)];
-            
+
+            const users = [...new Set(messages.map(m => m.author.id))].map(id => id)
+
             const embed = new MessageEmbed()
                 .setTitle("Thread Closed")
-                .setDescription(`**Participating users:**\n${users.map(u => `<@${u.id}>`).join(", ")}`)
+                .setDescription(`**Participating users:**\n${users.map(u => `<@${u}>`).join("\n")}`)
                 .addField(`Info`, `Opened by <@${ticket.user}>\nOpened <t:${Math.round(ticket.createdAt/1000)}:R>\n\nClosed by <@${message.author.id}>\nClosed <t:${Math.round(Date.now()/1000)}:R>`)
                 .setColor("RED")
                 .setFooter({ text: `Ticket closed by ${message.author.tag}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) })

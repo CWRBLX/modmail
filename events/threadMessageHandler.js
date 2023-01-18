@@ -10,7 +10,7 @@ module.exports = {
         if (message.content.startsWith(client.prefix)) return; // ignore commands
 
         const thread = await client.db.collection("modmailThread").findOne({ channel: message.channel.id, closed: false });
-        const role = message.member.roles.cache.filter(r => r.hoist).sort((a, b) => b.position - a.position).first();
+        const role = message?.member?.roles?.cache?.filter(r => r.hoist).sort((a, b) => b.position - a.position)?.first() || null;
 
         if (thread) {
             const user = await client.users.fetch(thread.user);
