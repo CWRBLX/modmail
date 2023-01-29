@@ -27,13 +27,17 @@ module.exports.logMsg = async (options) => {
     })
 }
 
+module.exports.isBlacklisted = async (options) => {
+    const isBlacklisted = await options.db.collection("modmailBlacklist").findOne({ id: options.userId })
+    return isBlacklisted ? isBlacklisted : false
+}
 
 module.exports.blacklistUser = async (options) => {
-    const isBlacklisted = await options.db.collection("blacklist").findOne({ id: options.userId })
+    const isBlacklisted = await options.db.collection("modmailBlacklist").findOne({ id: options.userId })
     if (isBlacklisted) return {
         error: "That user is already blacklisted"
     }
-    await options.db.collection("blacklist").insertOne({
+    await options.db.collection("modmailBlacklist").insertOne({
         id: options.userId,
         reason: options.reason,
         moderator: options.modId,
@@ -45,11 +49,11 @@ module.exports.blacklistUser = async (options) => {
 }
 
 module.exports.unblacklistUser = async (options) => {
-    const isBlacklisted = await options.db.collection("blacklist").findOne({ id: options.userId })
+    const isBlacklisted = await options.db.collection("modmailBlacklist").findOne({ id: options.userId })
     if (!isBlacklisted) return {
         error: "That user isn't blacklisted"
     }
-    await options.db.collection("blacklist").deleteOne({ id: options.userId })
+    await options.db.collection("modmailBlacklist").deleteOne({ id: options.userId })
     return {
         error: null
     }

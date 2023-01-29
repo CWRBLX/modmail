@@ -1,5 +1,5 @@
 const { MessageEmbed } = require("discord.js");
-const { logMsg } = require("../utils");
+const { logMsg, isBlacklisted } = require("../utils");
 
 module.exports = {
     name: "messageCreate",
@@ -7,11 +7,17 @@ module.exports = {
         if (message.author.bot) return;
         if (message.guild) return;
 
-        if (message.content.startsWith(client.prefix)) return; // ignore commands
+        if (message?.content) {
+            if (!message?.content[0].match(/[a-zA-Z0-9]/)) return;
+        }
+
+        const isUserBlacklisted = await isBlacklisted({ userId: message.author.id, db: client.db })
+        if (isUserBlacklisted) return message.reply({ content: client.error("You are blacklisted from using ModMail.") })
 
         // check if modmail thread exists
         const thread = await client.db.collection("modmailThread").findOne({ user: message.author.id, closed: false });
         if (thread) {
+            if (!message?.content && !message?.attachments?.size) return await message.react("❌");
             const channel = client.channels.cache.get(thread.channel) || await client.channels.fetch(thread.channel);
             if (channel) {
                 await logMsg({
@@ -30,6 +36,7 @@ module.exports = {
             }
         }
         else {
+            if (!message?.content && !message?.attachments?.size) return await message.react("❌");
             const channel = await client.guild.channels.create(`modmail-${message.author.username}`, {
                 type: "GUILD_TEXT",
                 parent: process.env.CATEGORY
