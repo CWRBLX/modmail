@@ -26,3 +26,31 @@ module.exports.logMsg = async (options) => {
         createdAt: Date.now()
     })
 }
+
+
+module.exports.blacklistUser = async (options) => {
+    const isBlacklisted = await options.db.collection("blacklist").findOne({ id: options.userId })
+    if (isBlacklisted) return {
+        error: "That user is already blacklisted"
+    }
+    await options.db.collection("blacklist").insertOne({
+        id: options.userId,
+        reason: options.reason,
+        moderator: options.modId,
+        createdAt: Date.now()
+    })
+    return {
+        error: null
+    }
+}
+
+module.exports.unblacklistUser = async (options) => {
+    const isBlacklisted = await options.db.collection("blacklist").findOne({ id: options.userId })
+    if (!isBlacklisted) return {
+        error: "That user isn't blacklisted"
+    }
+    await options.db.collection("blacklist").deleteOne({ id: options.userId })
+    return {
+        error: null
+    }
+}
