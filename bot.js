@@ -37,6 +37,8 @@ client.on("ready", async () => {
     client.user.setActivity(process.env.STATUS, { type: `PLAYING` });
 });
 
+client.error = (msg) => { return `${process.env?.ERROR_EMOJI ? process.env.ERROR_EMOJI : `❌`} ${msg}` }
+client.success = (msg) => { return `${process.env?.SUCCESS_EMOJI ? process.env.SUCCESS_EMOJI : `✅`} ${msg}` }
 
 // import commands and events
 for (file of fs.readdirSync("./commands").filter(f => f.endsWith(".js"))) {
