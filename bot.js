@@ -73,8 +73,9 @@ client.on("messageCreate", async message => {
     if (message.content.startsWith(client.prefix)) {
         const args = message.content.slice(client.prefix.length).trim().split(/ +/);
         const command = args.shift().toLowerCase();
-        if (client.commands.has(command)) {
-            client.commands.get(command).execute(client, message, args);
+        if (client.commands.has(command) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command))) {
+            const cmd = client.commands.get(command) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
+            await cmd.execute(client, message, args);
         }
     }
 })
