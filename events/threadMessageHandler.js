@@ -22,7 +22,7 @@ module.exports = {
 
             const user = await client.users.fetch(thread.user);
             await user.send({ 
-                content: `**(${role ? role.name : "Staff Member"}) ${message.member.displayName || message.author.username}:**${message.content ? `\n> ${message.content}` : ``}`,
+                content: `**(${role ? role.name : "Staff Member"}) ${message.member.displayName || message.author.username}:**${message.content ? `\n>>> ${message.content}` : ``}`,
                 embeds: message.embeds,
                 files: message?.attachments ? [...message.attachments.values()] : []
             }).catch(() => null);
