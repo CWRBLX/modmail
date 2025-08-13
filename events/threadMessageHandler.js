@@ -16,6 +16,8 @@ module.exports = {
         const role = message?.member?.roles?.cache?.filter(r => r.hoist).sort((a, b) => b.position - a.position)?.first() || null;
 
         if (thread) {
+            return await message.reply(`Postman Pat is no longer in service. If you still need help, please head to our Discord server (verify in the #verify channel then head to the #support channel) or https://combatwarriors.gg/support - we'll be happy to help.`)
+            
             if (!message?.content && !message?.attachments?.size) return await message.react("❌");
             const isUserBlacklisted = await isBlacklisted({ userId: message.author.id, db: client.db })
             if (isUserBlacklisted) return await message.react("❌")

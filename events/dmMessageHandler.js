@@ -7,6 +7,8 @@ module.exports = {
         if (message.author.bot) return;
         if (message.guild) return;
 
+        return await message.reply(`Postman Pat is no longer in service. If you still need help, please head to our Discord server (verify in the #verify channel then head to the #support channel) or https://combatwarriors.gg/support - we'll be happy to help.`)
+        
         if (message?.content) {
             if (!message?.content[0].match(/[a-zA-Z0-9]/)) return;
         }
