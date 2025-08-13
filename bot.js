@@ -74,6 +74,7 @@ client.on("messageCreate", async message => {
         const args = message.content.slice(client.prefix.length).trim().split(/ +/);
         const command = args.shift().toLowerCase();
         if (client.commands.has(command) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command))) {
+            return await message.reply(`Postman Pat is no longer in service. If you still need help, please head to our Discord server (verify in the #verify channel then head to the #support channel) or https://combatwarriors.gg/support - we'll be happy to help.`)
             const cmd = client.commands.get(command) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command));
             await cmd.execute(client, message, args);
         }
